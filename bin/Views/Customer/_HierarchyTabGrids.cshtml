@@ -1,0 +1,57 @@
+﻿@model SmartStore.Admin.Models.Hierarchy.GridModelCC<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>
+	@using Telerik.Web.Mvc.UI;
+	<div class="row supreme-container">
+		<div class="col-md-2"></div>
+		@{
+			if (Model.ParentCustomerData != null)
+			{
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-9">
+							<h5>@T("Admin.Configuration.Hierarchy.ParentCustomers")</h5>
+						</div>
+					</div>
+					<div id="divParentCustomerGrid">
+						@(Html.Telerik().Grid<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>()
+							.Name("cchierarchyentities-grid")
+							.BindTo(Model.ParentCustomerData)
+
+							.Columns(columns =>
+							{
+								columns.Bound(x => x.Email);
+								columns.Bound(x => x.FirstName);
+								columns.Bound(x => x.LastName);
+								
+							})
+							.EnableCustomBinding(true)
+						)
+					</div>
+				</div>
+			} }
+		@{
+			if (Model.ChildCustomerData != null)
+			{
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-9">
+							<h5>@T("Admin.Configuration.Hierarchy.ChildCustomers")</h5>
+						</div>
+					</div>
+					<div id="divChildCustomerGrid">
+						@(Html.Telerik().Grid<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>()
+													.Name("cchierarchyentities-grid")
+													.BindTo(Model.ChildCustomerData)
+													.Columns(columns =>
+													{
+														columns.Bound(x => x.Email);
+														columns.Bound(x => x.FirstName);
+														columns.Bound(x => x.LastName);
+												})
+													.EnableCustomBinding(true)
+						)
+					</div>
+				</div>
+			}
+		}
+	</div>
+

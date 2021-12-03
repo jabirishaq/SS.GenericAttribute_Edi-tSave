@@ -1,0 +1,74 @@
+﻿@model CheckoutProgressModel
+@using SmartStore.Web.Models.Checkout;
+
+@{
+    var progresses = new List<dynamic> {
+        // Cart
+  //      new {
+		//	Step = CheckoutProgressStep.Cart,
+		//	StepName = "cart",
+		//	Label =  T("Checkout.Progress.Cart").Text,
+		//	Visited = Model.CheckoutProgressStep > CheckoutProgressStep.Cart,
+		//	Active = Model.CheckoutProgressStep == CheckoutProgressStep.Cart,
+		//	Href = Url.RouteUrl("ShoppingCart")
+		//},
+        // Address
+        new {
+            Step = CheckoutProgressStep.Checkout,
+            StepName = "checkout",
+			//Label =  T("Checkout.Progress.Address").Text,
+			Label =  "Checkout",
+            Visited = Model.CheckoutProgressStep > CheckoutProgressStep.Checkout,
+            Active = Model.CheckoutProgressStep == CheckoutProgressStep.Checkout,
+            Href = Url.Action("Index")
+        },
+        // Confirm
+        new {
+            Step = CheckoutProgressStep.Confirm,
+            StepName = "confirm",
+            Label =  T("Checkout.Progress.Confirm").Text,
+            Visited = Model.CheckoutProgressStep > CheckoutProgressStep.Confirm,
+            Active = Model.CheckoutProgressStep == CheckoutProgressStep.Confirm,
+            Href = Url.Action("Confirm")
+        },
+        // Complete
+        new {
+            Step = CheckoutProgressStep.Complete,
+            StepName = "complete",
+            Label =  T("Checkout.Progress.Complete").Text,
+            Visited = Model.CheckoutProgressStep > CheckoutProgressStep.Complete,
+            Active = Model.CheckoutProgressStep == CheckoutProgressStep.Complete,
+            Href = "javascript:void(0)"
+        }
+    };
+}
+
+@{ Html.RenderWidget("checkout_steps_before"); }
+
+<div class="costeps row no-gutters">
+	@foreach (var p in progresses)
+	{
+		string stateClass = null;
+		string href = p.Visited || p.Active ? p.Href : "javascript:void(0)";
+		if (p.Visited)
+		{
+			stateClass = "visited";
+		}
+		else if (p.Active)
+		{
+			stateClass = "active";
+		}
+		else
+		{
+			stateClass = "inactive";
+		}
+		<div class="col-4 costep @stateClass" data-step="@p.StepName">
+			<a class="costep-link" href="@href">
+				<i class="costep-icon"></i>
+				<span class="costep-label">@p.Label</span>
+			</a>
+		</div>
+	}
+</div>
+
+@{ Html.RenderWidget("checkout_steps_after"); }

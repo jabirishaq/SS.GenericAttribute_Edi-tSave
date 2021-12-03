@@ -1,0 +1,287 @@
+﻿@model SmartStore.Admin.DBManager.Models.TableManager
+@{
+    Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+    ViewBag.Title = T("Admin.ContentManagement.DBManager.Title");
+
+    string Name = TempData["TableName"].ToString();
+    int recordNum = 0;
+}
+
+<style>
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+<div class="section-header">
+    <div class="title">
+        <i class="fa fa-database"></i>
+        Table Data
+        <a href='@Url.Action("List", "DBManager")'>(Back To List)</a>
+    </div>
+    <div class="options">
+        <div class="options">
+            <a href="#" id="myBtn" class="btn btn-secondary mr-1">
+                <i class="fa fa-upload"></i>
+                <span>Import Data</span>
+            </a>
+            <a href="@Url.Action("Export", new { @id = Name })" class="btn btn-success">
+                <i class="fa fa-database"></i>
+                <span>Export Data</span>
+            </a>
+            @if (ViewBag.IsTableError == null)
+            {
+                <a href="@Url.Action("EditDataDetail", new { @id = "-1", @tableName = Name })" class="btn btn-primary">
+                    <i class="fa fa-plus"></i>
+                    <span>Add Data</span>
+                </a>
+                <a href="@Url.Action("EditTableColumns", new { @id = Name })" class="btn btn-warning">
+                    <i class="fa fa-check"></i>
+                    <span>Edit Table</span>
+                </a>
+            }
+
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.IsTableError != null)
+{
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <strong>Table Error :</strong>The table is not in the correct format. Please check fields. Missing 'Id(int)'.
+            </div>
+        </div>
+
+    </div>
+    <br />
+}
+<div class="row">
+    <div class="col-md-4">
+        @Html.TextBox("TableName", Name, new { @readonly = "readonly" })
+    </div>
+
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="uploadpackage-windowLabel">Upload CSV </h5><span class="close">&times;</span>
+        </div><div class="modal-body">
+
+            <form id="uploader">
+                <div class="alert alert-info">
+                    Choose a data file (*.csv) to upload to your server. The file will be automatically extracted and update the table "@Name".
+                </div>
+                <div class="adminContent">
+                    <div class="adminRow">
+                        <div class="adminTitle">
+                            <div class="ctl-label">
+                                <label class="col-form-label" for="packagefile">CSV file:</label>
+                            </div>
+                        </div>
+                        <div class="adminData">
+                            <input type="file" id="fileInput" name="fileInput" class="form-control-plaintext">
+                        </div>
+                        <span id="progress">
+
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="submit" class="btn btn-primary">
+                        <span>Import </span>
+                    </button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="divDetailDataGrid" class="t-widget t-grid">
+            <table cellspacing="0">
+                <thead class="t-grid-header">
+                    <tr>
+                        @foreach (var column in Model.lstColumn)
+                        {
+                            <th class="t-header scope="col">
+                                <span class="t-link">@column.ColumnName</span>
+                            </th>
+                        }
+                        <th class="t-header scope="col" width="10%"><span class="t-link"></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var itm in Model.lstRow)
+                    {
+                        var arr = (object[])itm.Value;
+                        <tr class="t-alt">
+                            @for (int i = 0; i < arr.Length; i++)
+                            {
+                                <td>
+                                    @arr[i].ToString()
+                                </td>
+                                {
+                                    recordNum++;
+                                }
+                                if (ViewBag.IsTableError == null && recordNum == arr.Length)
+                                {
+                                    <td width="15%">
+                                        @Html.ActionLink("Edit", "EditDataDetail", "DBManager",
+                                        new { @id = arr[0], @tableName = Name },
+                                        new { @class = "t-button btn btn-warning" })
+
+                                        @Html.ActionLink("Delete", "DeleteRow", "DBManager",
+                                        new { @id = arr[0], @tableName = Name },
+                                        new { @class = "btn btn-danger", onclick = "Confirm()" })
+                                    </td>
+                                }
+                            }
+                            @{
+                                recordNum = 0;
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function Confirm() {
+        if (!confirm("Are you sure to continue?")) {
+            event.preventDefault();
+        }
+    }
+</script>
+
+<script>
+	function ShowImport() {
+		var importDiv = document.getElementById("divImport");
+		if (importDiv.style.display == "block") {
+			importDiv.style.display = "none";
+		}
+		else {
+			importDiv.style.display = "block";
+		}
+	}
+document.getElementById('uploader').onsubmit = function () {
+	var formdata = new FormData(); //FormData object
+	//formdata.append('@Name');
+    var fileInput = document.getElementById('fileInput');
+    //Iterating through each files selected in fileInput
+    for (i = 0; i < fileInput.files.length; i++) {
+        //Appending each file to FormData object
+		formdata.append(fileInput.files[i].name, fileInput.files[i]);
+		formdata.append("tableName", '@Name');
+    }
+    //Creating an XMLHttpRequest and sending
+	var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/Admin/DBManager/UploadFile/');
+
+    xhr.upload.addEventListener('progress', function (e) {
+        var percent_complete = (e.loaded / e.total) * 100;
+
+        // Percentage of upload completed
+        //console.log(percent_complete);
+        var completed = parseInt(percent_complete);
+        document.getElementById("progress").innerHTML = completed + " %";
+        //if (completed == 100) {
+        //    document.getElementById("progress").innerHTML = "processing...";
+        //}
+
+    });
+    xhr.onloadstart = function (e) {
+        //console.log("start")
+      // document.getElementById("progress").innerHTML = "processing...";
+    }
+    xhr.onloadend = function (e) {
+        //console.log("end")
+
+    }
+
+    xhr.send(formdata);
+
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+           // alert(xhr.responseText);
+			//document.getElementById("progress").innerHTML = "File Uploaded Successfully";
+			location.reload();
+        }
+    }
+    return false;
+}
+
+</script>
+
+<script>
+    var modal = document.getElementById('myModal');
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    //window.onclick = function (event) {
+    //    if (event.target == modal) {
+    //        modal.style.display = "none";
+    //    }
+    //}
+</script>

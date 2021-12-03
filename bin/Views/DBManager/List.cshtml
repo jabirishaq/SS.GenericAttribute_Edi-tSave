@@ -1,0 +1,26 @@
+﻿@using Telerik.Web.Mvc.UI;
+@model Telerik.Web.Mvc.GridModel<SmartStore.Admin.DBManager.Models.DBManagerModel>
+
+	@{
+		Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+		ViewBag.Title = T("Admin.ContentManagement.DBManager.Title");
+	}
+	<div class="section-header">
+        <div class="title">
+            <i class="fa fa-database"></i>
+            @T("Admin.ContentManagement.DBManager.Title")
+        </div>
+		<div class="options">
+			<a href="@Url.Action("CreateTable")" class="btn btn-primary">
+				<i class="fa fa-plus"></i>
+				<span>Add Table</span>
+			</a>
+		</div>
+	</div>
+
+	<div class="row" id="divDBManagerGrid">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+			@{ Html.RenderPartial("_DBManagerGrid", Model);}
+		</div>
+	</div>

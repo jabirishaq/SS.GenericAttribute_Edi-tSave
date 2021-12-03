@@ -1,0 +1,72 @@
+﻿@model SmartStore.Core.Domain.Hierarchy.HierarchyModel
+@using System.Web.Mvc;
+@{
+	Layout = null;
+}
+<script src="http://localhost:55621/Content/vendors/jquery/jquery.validate.min.js"></script>
+<script src="http://localhost:55621/Content/vendors/jquery/jquery.validate.unobtrusive.min.js"></script>
+
+@using (Ajax.BeginForm("_AddOrUpdateHierarchy", "Hierarchy",
+		new AjaxOptions
+		{
+			HttpMethod = "POST",
+			OnSuccess = "OnSuccess"
+		}
+))
+{
+
+<div class="section-header pr-3 pl-3">
+	<div class="title">
+		<i class="fa fa-users"></i>
+		Add Hierarchy
+	</div>
+
+	<div class="options">
+		<button type="submit" name="save" value="save" class="btn btn-primary">
+			<i class="fa fa-check"></i>
+			<span>@T("Admin.Common.Save")</span>
+		</button>
+		<button type="button" class="btn btn-secondary float-right ml-1" data-dismiss="modal">
+			<i class="fa fa-times"></i>
+			<span>Close</span>
+		</button>
+	</div>
+</div>
+
+@Html.HiddenFor(model => model.Id)
+
+	if (ViewBag.edit == 1)
+	{
+	<div class="alert alert-danger mb-0" style="margin-top:65px;">
+		@T("Admin.Configuration.Hierarchy.Warning")
+	</div>
+		
+		<div class="adminContent">
+			<div class="form-group adminData">
+				@Html.LabelFor(model => model.Name, new { @class = "col-form-label" })
+				@Html.EditorFor(model => model.Name, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Name)
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(model => model.HierarchyType, new { @class = "col-form-label" })
+				@Html.DropDownListFor(model => model.HierarchyType, Model.HierarchyTypeList, "-- Select --")
+				@Html.ValidationMessageFor(model => model.HierarchyType)
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="adminContent" style="margin-top:50px;">
+			<div class="form-group adminData">
+				@Html.LabelFor(model => model.Name, new { @class = "col-form-label" })
+				@Html.EditorFor(model => model.Name, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Name)
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(model => model.HierarchyType, new { @class = "col-form-label" })
+				@Html.DropDownListFor(model => model.HierarchyType, Model.HierarchyTypeList, "-- Select --")
+				@Html.ValidationMessageFor(model => model.HierarchyType)
+			</div>
+		</div>
+	}
+}

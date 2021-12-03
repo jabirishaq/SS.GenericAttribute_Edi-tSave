@@ -1,0 +1,21 @@
+﻿@model SmartStore.Admin.Models.Hierarchy.GridModelCC<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>
+@using Telerik.Web.Mvc.UI;
+
+@(Html.Telerik().Grid<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>()
+		.Name("cchierarchyentities-grid")
+		.BindTo(Model.ChildCustomerData)
+		.Columns(columns =>
+		{
+			columns.Bound(x => x.Email);
+			columns.Bound(x => x.FirstName);
+			columns.Bound(x => x.LastName);
+			columns.Bound(x => x.Id)
+			.Template(x => string.Format("<a href='#Modal' class='btn btn-danger' onclick='javascript: DeleteHierarchyMapping(" + x.Id + ")'>Delete</a>"))
+			.Width(50)
+			.Filterable(false)
+			.Title(String.Empty)
+			.HtmlAttributes(new { align = "right", @class = "omega" });
+		})
+		// .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "CCHierarchyMapping"))
+		.EnableCustomBinding(true)
+)

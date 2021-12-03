@@ -1,0 +1,43 @@
+﻿@model Telerik.Web.Mvc.GridModel<SmartStore.Core.Domain.Hierarchy.HierarchyModel>
+	@using Telerik.Web.Mvc.UI;
+
+	@(Html.Telerik().Grid<SmartStore.Core.Domain.Hierarchy.HierarchyModel>
+			()
+			.Name("cchierarchyentitiesTest-grid")
+			.BindTo(Model.Data)
+			.Columns(columns =>
+			{
+				columns.Bound(x => x.Name);
+				columns.Bound(x => x.HierarchyType)
+				.Title(String.Empty)
+				.Template(x => string.Format("<input type='hidden' />", x.HierarchyType));
+				columns.Bound(x => x.HierarchyTypeName)
+				.Title("Hierarchy Type");
+				columns.Bound(x => x.CreatedOnUtc)
+				.Title("Created On");
+				columns.Bound(x => x.UpdatedOnUtc)
+				.Title("Updated On");
+
+				columns.Bound(x => x.Id)
+				.Template(x => Html.ActionLink("Mappings", "../HierarchyMapping/CCHierarchyList", new { id = x.Id }, new { @class = "t-button" }))
+				.Width(50)
+				.Filterable(false)
+				.Title(String.Empty)
+				.HtmlAttributes(new { align = "right", @class = "omega" });
+
+				columns.Bound(x => x.Id)
+				.ReadOnly()
+				.Template(x => string.Format("<a href='#Modal' data-toggle='modal' data-target='#Modal' class='btn btn-success button-edit' role='button' onclick='javascript: EditHierarchy(" + x.Id + ")'>Edit</a>"))
+				.Width(50)
+				.Title(String.Empty)
+				.HtmlAttributes(new { align = "right", @class = "omega" });
+
+				columns.Bound(x => x.Id)
+				.Template(x => string.Format("<a href='#Modal' class='btn btn-danger' onclick='javascript: DeleteHierarchy(" + x.Id + ")'>Delete</a>"))
+				//.Template(x => Html.ActionLink(T("Admin.Common.Delete").Text, "Delete", new { id = x.Id }, new { @class = "btn btn-danger", id = "hierarchy-delete" }))
+				.Width(50)
+				.Title(String.Empty)
+				.HtmlAttributes(new { align = "right", @class = "omega" });
+
+			})
+			.EnableCustomBinding(true))

@@ -1,0 +1,53 @@
+﻿@model SmartStore.Core.Domain.Hierarchy.HierarchyModel
+@{
+	Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+}
+@using (Html.BeginForm())
+{
+	<div class="section-header">
+		<div class="title">
+			@T("Plugins.CC.Plugins.CCHierarchy.CCHierarchyEntity.Entities.Edit")
+			<a href='@Url.Action("List")'>(@T("Plugins.CC.Plugins.CCHierarchy.CCHierarchyEntity.Entities.BackToList"))</a>
+		</div>
+		<div class="options">
+			<button type="submit" name="save" value="save" class="btn btn-warning">
+				<i class="fa fa-check"></i>
+				<span>@T("Admin.Common.Save")</span>
+			</button>
+			<button type="submit" name="save" value="save-continue" class="btn btn-secondary">
+				<span>@T("Admin.Common.SaveContinue")</span>
+			</button>
+			<button type="submit" name="save" value="DeleteConfirmed" id="DeleteConfirmed" class="btn btn-danger">
+				<i class="far fa-trash-alt"></i>
+				<span>@T("Admin.Common.Delete")</span>
+			</button>
+		</div>
+	</div>
+	@Html.ValidationSummary(true)
+	@Html.HiddenFor(model => model.Id)
+
+	<table class="adminContent">
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.Name)
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(model => model.Name)
+				@Html.ValidationMessageFor(model => model.Name)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.HierarchyType)
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(model => model.HierarchyType)
+				@Html.ValidationMessageFor(model => model.HierarchyType)
+			</td>
+		</tr>
+
+	</table>
+
+}
+@*@Html.DeleteConfirmation("cchierarchyentity-delete")*@
+

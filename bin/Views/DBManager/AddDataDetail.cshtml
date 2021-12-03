@@ -1,0 +1,121 @@
+﻿@model SmartStore.Admin.DBManager.Models.TableManager
+@{
+	Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+	ViewBag.Title = "EditRow";
+	string tableName = TempData["TableName"].ToString();
+	int recordNum = 0;
+	string Id = "";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<div class="section-header">
+	<div class="title">
+		<i class="fa fa-database"></i>
+		Add Table Data
+		<a href='@Url.Action("List", "DBManager")'>(Back To List)</a>
+	</div>
+	<div class="options">
+		<button type="button" id="btnSave" name="save" onclick="GetTextBoxValueOne()" value="save" class="btn btn-warning">
+			<i class="fa fa-check"></i>
+			<span>@T("Admin.Common.Save")</span>
+		</button>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-4">
+		@Html.TextBox("TableName", tableName, new { @readonly = "readonly" })
+	</div>
+</div>
+<p></p>
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<div id="divDetailDataGrid" class="t-widget t-grid">
+			<table id="tblData" border="0">
+				@foreach (var itm in Model.lstColumn)
+				{
+					<tr>
+						@if (itm.ColumnName != "Id")
+						{
+							string[] colType = itm.DataType.Split('.');
+							<td style="border:none;width:25%;text-align:right;">
+								@itm.ColumnName - @colType[1]
+							</td>
+							if (itm.DataType.Contains("Date"))
+							{
+								<td style="border:none;">
+									@Html.TextBox(itm.ColumnName, null, new { @Name = (itm.ColumnName + "=" + itm.DataType), @class = "datepicker_recurring_start" })
+								</td>
+							}
+							else if (itm.DataType.Contains("Int"))
+							{
+								<td style="border:none;">
+									@Html.TextBox(itm.ColumnName, null, new { @Name = (itm.ColumnName + "=" + itm.DataType), @type = "number" })
+								</td>
+							}
+							else if (itm.DataType.Contains("Boolean"))
+							{
+								var attrName = itm.ColumnName + "=" + itm.DataType;
+								<td style="border:none;">
+									@Html.TextBox(itm.ColumnName, null, new { @Name = (itm.ColumnName + "=" + itm.DataType), @placeholder = "Enter 0 or 1", @maxlength = "1", onkeypress = "return booleanValidation(event)" })
+								</td>
+							}
+							else
+							{
+								<td style="border:none;">
+									@Html.TextBox(itm.ColumnName, null, new { @Name = (itm.ColumnName + "=" + itm.DataType) })
+								</td>
+							}
+						}
+					</tr>
+				}
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+	function booleanValidation(evt) {
+
+		var charCode = (evt.which) ? evt.which : event.keyCode;
+		if ((charCode == 48 || charCode == 49)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+</script>
+<script>
+	var model = [{ Value: '' }];
+	$('body').on('focus', ".datepicker_recurring_start", function () { $(this).datepicker();});
+    function GetTextBoxValueOne() {
+		$("#tblData tr td").children(":input").each(function () {
+				model.push($(this).val() + "=" + $(this).attr('name'));
+		});
+        model.push('@Id');
+        model.push('@tableName');
+         $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@Url.Content("~/Admin/DBManager/AddRow")",
+             data: JSON.stringify(model ),
+            dataType: "json",
+             success: function (data) {
+
+				if (data && !data.IsError) {
+					window.location.href = '@Url.Action("DataDetail", "DBManager", new { @tableName = @tableName})';
+				 }
+				 model = [{ Value: '' }];
+            },
+            error: function (data) {
+                alert('error occured');
+				model = [{ Value: '' }];
+            }
+        });
+    }
+</script>

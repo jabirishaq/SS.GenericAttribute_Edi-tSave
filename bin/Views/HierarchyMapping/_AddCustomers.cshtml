@@ -1,0 +1,254 @@
+﻿@model Telerik.Web.Mvc.GridModel<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>
+	@using Telerik.Web.Mvc.UI;
+	@using SmartStore.Web.Models.Common;
+	@using SmartStore.Core;
+	@using SmartStore.Core.Infrastructure;
+
+	@using System.Globalization;
+	@{
+		Layout = null;
+	}
+	@{
+		var gridPageSize = EngineContext.Current.Resolve<SmartStore.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+		//Console.WriteLine(gridPageSize);
+		ViewBag.Title = T("Admin.Customers.Customers").Text;
+		var EntityId = ViewData["EntityId"];
+		var IsParent = ViewData["IsParent"];
+		string SelectedIds = "";
+	}
+
+	<style>
+		.add-grid-margin{
+			margin-top: 55px;
+		}
+	</style>
+
+	<script type="text/javascript">
+		var selectedIds = [];
+
+		$(document).ready(function () {
+
+			// Filter toggler
+			$('.btn-toggle-filter').on('click', function (e) {
+
+				if ($('#divDisplayData').hasClass("add-grid-margin"))
+				{
+					$('#divDisplayData').removeClass("add-grid-margin");
+				}
+				else
+				{
+					$('#divDisplayData').addClass("add-grid-margin");
+				}
+				
+				$('.grid-filter').slideToggle({ duration: 200, easing: 'ease-in-out' });
+			});
+
+			//search button
+			$('#search-customers').click(function () {
+				var grid = $('#customers-grid').data('tGrid');
+				grid.currentPage = 1; //new search. Set page size to 1
+				grid.ajaxRequest();
+				return false;
+			});
+			$('#add-customer').click(function () {
+				var grid = $('#customers-grid').data('tGrid');
+				grid.currentPage = 1; //new search. Set page size to 1
+				grid.ajaxRequest();
+				return false;
+			});
+
+
+			$("#customerFrm").submit(function (event) {
+				//alert("Handler for .submit() called.");
+				if ($("#customerFrm input:checkbox:checked").length == 0)
+				{
+					alert("Please select at least one record to add!");
+					event.preventDefault();
+					return false;
+				}
+			});
+
+			$("#customerFrm").on("keydown", function (e) {
+				//alert();
+				if (e.keyCode == 13) {
+					//$("#search-customers").click();
+					e.preventDefault();
+					return false;
+				}
+			});
+
+
+			$('#mastercheckbox').click(function () {
+				$('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+			});
+
+			//wire up checkboxes.
+			$(document).on('change', '#customers-grid input[type=checkbox][id!=mastercheckbox]', function (e) {
+				var $check = $(this);
+				//alert($check.val());
+				if ($check.is(":checked") == true) {
+					var checked = jQuery.inArray($check.val(), selectedIds);
+					if (checked == -1) {
+						//add id to selectedIds.
+						selectedIds.push($check.val());
+					}
+				}
+				else {
+					var checked = jQuery.inArray($check.val(), selectedIds);
+					if (checked > -1) {
+						//remove id from selectedIds.
+						selectedIds = $.grep(selectedIds, function (item, index) {
+							return item != $check.val();
+						});
+					}
+				}
+				updateMasterCheckbox();
+				$('#SelectedIds').val(selectedIds.toString());
+			});
+
+		});
+
+
+		function onDataBound() {
+			$('#customers-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+				var currentId = $(this).val();
+				var checked = jQuery.inArray(currentId, selectedIds);
+				//set checked based on if current checkbox's value is in selectedIds.
+				$(this).attr('checked', checked > -1);
+			});
+
+			//updateMasterCheckbox();
+		}
+
+		function onRowDataBound(e) {
+			//if (!e.dataItem.Active) {
+			//	$(e.row).find('td').wrapInner('<span class="muted" />');
+			//}
+		}
+
+		function updateMasterCheckbox() {
+			var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox]').length;
+			var numChkBoxesChecked = $('#customers-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+			$('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+		}
+
+		function onDataBinding(e) {
+			var searchModel = {
+				SearchEmail: $('#SearchEmail').val(),
+				//SearchFirstName: $('#SearchFirstName').val(),
+				//SearchLastName: $('#SearchLastName').val(),
+				CustomerID: $('#SingleId').val(),
+				HierarchyEntityID: $('#EntityId').val(),
+				IsParent: $('#IsParent').val()
+			};			
+			e.data = searchModel;
+		}
+
+		function Add(id) {
+			$('#SingleId').val(id);
+		}
+
+		$('#clear-customers').click(function () {
+			 
+			$('#SearchEmail').val('');
+			var grid = $('#customers-grid').data('tGrid');
+				grid.currentPage = 1; //new search. Set page size to 1
+				grid.ajaxRequest();
+				return false;
+		});
+
+	</script>
+
+
+@using (Ajax.BeginForm("_AddCustomersSubmit", "HierarchyMapping",
+new AjaxOptions
+{
+	HttpMethod = "POST",
+	OnSuccess = "CustomerSuccess"
+	//OnFailure = "failed"
+}, new { id = "customerFrm" }
+))
+{
+
+	<div class="section-header pr-3 pl-3">
+		<div class="title">
+			<i class="fa fa-user-plus"></i>
+			@T("Admin.Configuration.Hierarchy.SelectCustomers")
+		</div>
+
+		<div class="options">
+			@*<div class="input-group d-inline-flex mr-3" style="width: 400px">*@
+				@*<button type="button" class="btn btn-outline-secondary btn-toggle-filter" data-toggle="button" aria-pressed="false">
+					<i class="fa fa-filter"></i>
+					<span>@T("Common.Filter")</span>
+					<i class="fa fa-angle-double-down"></i>
+				</button>*@
+			@*</div>*@
+
+			<button type="submit" name="save" value="save" class="btn btn-primary">
+				<i class="fa fa-check"></i>
+				<span>@T("Admin.Common.Save")</span>
+			</button>
+			<button type="button" class="btn btn-secondary float-right ml-1" data-dismiss="modal">
+				<i class="fa fa-times"></i>
+				<span>Close</span>
+			</button>
+		</div>
+	</div>
+
+	<div class="row mt-5 grid-filter pt-3">
+		<div class="col-xs-12 col-sm-12 col-lg-4 col-xl-6 form-group">
+
+			<input type="text" name="SearchEmail" id="SearchEmail" placeholder="Search Email, First Name or Last Name" />
+		</div>
+		<div class="col-xs-6 col-sm-6 col-lg-4 col-xl-3 form-group pr-1">
+
+			<button type="submit" id="search-customers" name="search-customers" class="btn btn-warning btn-block">
+				<i class="fa fa-filter"></i>
+				<span>@T("Admin.Common.ApplyFilter")</span>
+			</button>
+		</div>
+		<div class="col-xs-6 col-sm-6 col-lg-4 col-xl-3 form-group pl-1">
+
+			<button type="submit" id="clear-customers" name="clear-customers" class="btn btn-secondary btn-block">
+				<i class="fa fa-filter"></i>
+				<span>Clear filter</span>
+			</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<input id="EntityId" name="EntityId" hidden="hidden" value="@EntityId" />
+		<input type="text" id="IsParent" hidden="hidden" name="IsParent" value="@IsParent" />
+		<input id="SelectedIds" name="SelectedIds" hidden="hidden" value="@SelectedIds" />
+		<input id="SingleId" name="SingleId" hidden="hidden" />
+	</div>
+	
+	<div id="divDisplayData" style="margin-top:25px;">
+		@(Html.Telerik().Grid<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>()
+			.Name("customers-grid")
+			.ClientEvents(events => events
+			.OnDataBinding("onDataBinding")
+			.OnDataBound("onDataBound")
+			)
+			.BindTo(Model.Data)
+
+			.Columns(columns =>
+			{
+				columns.Bound(x => x.CustomerID)
+				.Template(x => string.Format("<input type='checkbox' name='checkedRecords' value='{0}' class='checkboxGroups'/>", x.CustomerID))
+				.ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= CustomerID #>' class='checkboxGroups'/>")
+				//.Title("<input id='mastercheckbox' type='checkbox'/>")
+				.Title(string.Empty)
+				.HtmlAttributes(new { style = "text-align:center" })
+				.HeaderHtmlAttributes(new { style = "text-align:center" });
+
+				columns.Bound(x => x.Email);
+				columns.Bound(x => x.FirstName);
+				columns.Bound(x => x.LastName);
+			})
+			.DataBinding(dataBinding => dataBinding.Ajax().Select("CustomerList", "HierarchyMapping"))
+			.EnableCustomBinding(true))
+	</div>
+
+}

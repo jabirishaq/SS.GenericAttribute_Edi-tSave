@@ -1,0 +1,9 @@
+﻿@model SmartStore.Core.Domain.Hierarchy.HierarchyModel
+
+@foreach (var item in Model.Items)
+{
+    <a href="@item.Url" rel="nofollow" class="list-group-item list-group-item-action">
+        <i class="fa fa-fw list-group-item-icon"></i>
+        <span>@item.Title</span>
+    </a>
+}

@@ -1,0 +1,70 @@
+@model CheckoutShippingAddressModel
+@using SmartStore.Web.Models.Checkout;
+
+<div class="page shipping-address-page">
+    <div class="page-title">
+            <h1 class="h3">@T("Checkout.ShippingAddress")</h1>
+            
+
+    </div>
+    <div class="page-body checkout-data">
+
+        @{ Html.RenderWidget("checkout_shipping_address_top"); }
+
+
+        <fieldset class="content-group mb-3">
+            <legend><span>@T("Checkout.SelectShippingAddress")</span></legend>
+            <div class="card-deck card-cols-sm-12 card-cols-md-12 card-cols-lg-12 address-list">
+                <div class="card card-block address-list-item" style="padding:20px">
+                    <div class="address-item">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.DropDownList("ShippingAddress", new SelectList(Model.ExistingAddresses, "Id", "Address1", Model.SelectedAddress), new { @class = "form-control", id = "shippingAddressDropDown" })
+                                <div class="edit-billing-address-icon shipping-address" data-id="1">
+                                    <i class="fa fa-edit"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="enter-address-body shipping-address d-none">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        
+
+        @{ Html.RenderWidget("checkout_shipping_address_middle"); }
+
+
+        @{ Html.RenderWidget("checkout_shipping_address_bottom"); }
+    </div>
+</div>
+<script>
+    $(function () {
+        var prevShippAddSelected = $('#shippingAddressDropDown').val();
+        var newOption = new Option('Add New', 0, false, false);
+        $('.edit-billing-address-icon.shipping-address').on('click', editBilling);
+        $('#shippingAddressDropDown')
+            .select2().prepend(newOption).trigger('change');
+        $('#shippingAddressDropDown').on('change', function (e) {
+            var id = $(this).val();
+            if (id == 0) {
+                $('.enter-address-body.shipping-address').removeClass('d-none');
+                $('.edit-billing-address-icon.shipping-address').hide();
+                $.ajax('@Url.Action("CreateOrEditAddress")', {
+                    success: function (response) {
+                        $('.enter-address-body.shipping-address').html(response);
+                    }
+                });
+            } else {
+                prevBillAddSelected = id;
+                $('.edit-billing-address-icon.shipping-address').show();
+                if (!$('.enter-address-body.shipping-address').hasClass('d-none'))
+                    $('.enter-address-body.shipping-address').addClass('d-none');
+            }
+
+            
+        });
+    });
+</script>

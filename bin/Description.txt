@@ -1,0 +1,9 @@
+﻿FriendlyName: Test Plugin
+SystemName: TestPlugin
+Group: Misc
+Version: 4.1.0
+MinAppVersion: 4.1.0
+Author: CC
+DisplayOrder: 1
+FileName: TestPlugin.dll
+ResourceRootKey: Plugins.TestPlugin

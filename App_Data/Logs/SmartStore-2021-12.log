@@ -1,0 +1,140 @@
+﻿SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T07:21:55.6761147Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T07:21:55.8400208Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T07:21:55.8540133Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 12 ms.
+    DateTime=2021-12-01T07:21:55.8550122Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T07:21:55.8849949Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 80 ms.
+    DateTime=2021-12-01T07:21:55.9229725Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T07:21:55.9229725Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T07:34:48.5210173Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T07:34:49.2782488Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T07:34:49.3212239Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 39 ms.
+    DateTime=2021-12-01T07:34:49.3212239Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T07:34:49.3282204Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 54 ms.
+    DateTime=2021-12-01T07:34:49.3352160Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T07:34:49.3352160Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T07:35:08.7289378Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T07:35:08.7862890Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T07:35:08.7942845Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 5 ms.
+    DateTime=2021-12-01T07:35:08.7942845Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T07:35:08.7982821Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 15 ms.
+    DateTime=2021-12-01T07:35:08.8032790Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T07:35:08.8042795Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T07:36:52.2343145Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T07:36:52.3033334Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T07:36:52.3113298Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 6 ms.
+    DateTime=2021-12-01T07:36:52.3113298Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T07:36:52.3153274Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 11 ms.
+    DateTime=2021-12-01T07:36:52.3163269Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T07:36:52.3163269Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T07:46:06.4769926Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T07:46:06.5219664Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T07:46:06.5269639Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 4 ms.
+    DateTime=2021-12-01T07:46:06.5269639Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T07:46:06.5309607Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 11 ms.
+    DateTime=2021-12-01T07:46:06.5339598Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T07:46:06.5339598Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T08:16:46.7734767Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T08:16:46.8135316Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T08:16:46.8185079Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 4 ms.
+    DateTime=2021-12-01T08:16:46.8185079Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T08:16:46.8235045Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 9 ms.
+    DateTime=2021-12-01T08:16:46.8245043Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T08:16:46.8245043Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T09:36:01.9991519Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T09:36:02.0771069Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T09:36:02.0851027Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 6 ms.
+    DateTime=2021-12-01T09:36:02.0861021Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T09:36:02.0920986Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 13 ms.
+    DateTime=2021-12-01T09:36:02.0930982Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T09:36:02.0930982Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T10:39:57.0954999Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T10:39:57.3166789Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T10:39:57.3267069Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 8 ms.
+    DateTime=2021-12-01T10:39:57.3267069Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T10:39:57.3306803Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 16 ms.
+    DateTime=2021-12-01T10:39:57.3346783Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T10:39:57.3346783Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T11:07:42.4105657Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T11:07:42.4775277Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T11:07:42.4855241Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 6 ms.
+    DateTime=2021-12-01T11:07:42.4855241Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T11:07:42.4945179Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 16 ms.
+    DateTime=2021-12-01T11:07:42.4955170Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T11:07:42.4955170Z
+SmartStore Verbose: 16 : ===================== APPINIT START
+    DateTime=2021-12-01T11:41:20.1825877Z
+SmartStore Verbose: 16 : Setting native DLL path to 'D:\Projects\Smart Minds\Smart Store\ss-Development\owp4.1\src\Plugins\TestPlugin\bin\x86'.
+    DateTime=2021-12-01T11:41:20.2385546Z
+SmartStore Verbose: 16 : Loaded plugin descriptors. 0 total, 0 incompatible.
+    DateTime=2021-12-01T11:41:20.2445520Z
+SmartStore Verbose: 16 : INIT PLUGINS (LoadPluginDescriptors). Time elapsed: 5 ms.
+    DateTime=2021-12-01T11:41:20.2445520Z
+SmartStore Verbose: 16 : Plugin changes detected in hash.
+    DateTime=2021-12-01T11:41:20.2505487Z
+SmartStore Verbose: 16 : INIT PLUGINS (Deployment complete). Time elapsed: 12 ms.
+    DateTime=2021-12-01T11:41:20.2515474Z
+SmartStore Verbose: 16 : ===================== APPINIT END
+    DateTime=2021-12-01T11:41:20.2515474Z

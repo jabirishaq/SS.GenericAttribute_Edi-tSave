@@ -1,0 +1,181 @@
+﻿
+@model Telerik.Web.Mvc.GridModel<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>
+	@using Telerik.Web.Mvc.UI;
+	@using SmartStore.Web.Models.Common;
+	@using SmartStore.Core;
+	@using SmartStore.Core.Infrastructure;
+
+	@using System.Globalization;
+	@{
+		Layout = null;
+	}
+	@{
+		var gridPageSize = EngineContext.Current.Resolve<SmartStore.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+
+		ViewBag.Title = T("Admin.Customers.Customers").Text;
+		var EntityId = ViewData["EntityId"];
+		var IsParent = ViewData["IsParent"];
+	}
+	<script type="text/javascript">
+		@*used by widget SmartStore.CommonExportProviders::ExportButtonsGeneral.cshtml*@
+		var selectedIds = [];
+
+        $(document).ready(function () {
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+            });
+			$('#search-roles').click(function () {
+				var grid = $('#roles-grid').data('tGrid');
+				grid.currentPage = 1; //new search. Set page size to 1
+				grid.ajaxRequest();
+				return false;
+			});
+            //wire up checkboxes.
+            $(document).on('change', '#roles-grid input[type=checkbox][id!=mastercheckbox]', function (e) {
+                var $check = $(this);
+                if ($check.is(":checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.
+                        selectedIds.push($check.val());
+                    }
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                }
+                updateMasterCheckbox();
+                $('#SelectedRoleIds').val(selectedIds.toString());
+                $('#SelectedChildRoleIds').val(selectedIds.toString());
+               // alert(selectedIds.toString());
+            });
+
+        });
+
+         function onDataBound() {
+                $('#roles-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                    var currentId = $(this).val();
+                    var checked = jQuery.inArray(currentId, selectedIds);
+                    //set checked based on if current checkbox's value is in selectedIds.
+                    $(this).attr('checked', checked > -1);
+                });
+
+                updateMasterCheckbox();
+            }
+
+            function onRowDataBound(e) {
+                if (!e.dataItem.Active) {
+                    $(e.row).find('td').wrapInner('<span class="muted" />');
+                }
+            }
+
+            function updateMasterCheckbox() {
+                var numChkBoxes = $('#roles-grid input[type=checkbox][id!=mastercheckbox]').length;
+                var numChkBoxesChecked = $('#roles-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            }
+
+            function onDataBinding(e) {
+                var searchModel = {
+					SearchRole: $('#SearchRole').val(),
+					HierarchyEntityID: $('#EntityId').val(),
+                };
+				e.data = searchModel;
+		}
+		$('#clear-roles').click(function () {
+			 
+			$('#SearchRole').val('');
+			var grid = $('#roles-grid').data('tGrid');
+			grid.currentPage = 1; //new search. Set page size to 1
+				grid.ajaxRequest();
+				return false;
+		});
+	</script>
+
+	@using (Ajax.BeginForm("_AddRolesSubmit", "CCHierarchyMapping",
+			new AjaxOptions
+			{
+				HttpMethod = "POST",
+				OnSuccess = "RoleSuccess"
+		//OnFailure = "failed"
+	}, new { id = "roleFrm" }
+	))
+
+	{
+
+		<div class="section-header">
+			<div class="title">
+				<i class="fa fa-user-plus"></i>
+				@T("Admin.Configuration.Hierarchy.SelectRoles")
+			</div>
+
+			<div class="options">
+				<button type="submit" name="save" value="save" class="btn btn-primary">
+					<i class="fa fa-check"></i>
+					<span>@T("Admin.Common.Save")</span>
+				</button>
+				<button type="button" class="btn btn-secondary float-right ml-1" data-dismiss="modal">
+					<i class="fa fa-times"></i>
+					<span>Close</span>
+				</button>
+			</div>
+		</div>
+		<div class="row mt-5 grid-filter pt-3">
+			<div class="col-xs-12 col-sm-12 col-lg-4 col-xl-6 form-group">
+
+				<input type="text" name="SearchRole" id="SearchRole" placeholder="Role Name" />
+			</div>
+			<div class="col-xs-6 col-sm-6 col-lg-4 col-xl-3 form-group pr-1">
+
+				<button type="submit" id="search-roles" name="search-roles" class="btn btn-warning btn-block">
+					<i class="fa fa-filter"></i>
+					<span>@T("Admin.Common.ApplyFilter")</span>
+				</button>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-lg-4 col-xl-3 form-group pl-1">
+
+				<button type="submit" id="clear-roles" name="clear-roles" class="btn btn-secondary btn-block">
+					<i class="fa fa-filter"></i>
+					<span>Clear filter</span>
+				</button>
+			</div>
+		</div>
+		
+
+		<div class="adminContent" style="margin-top:25px;">
+			@(Html.Telerik().Grid<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>()
+									.Name("roles-grid")
+									.ClientEvents(events => events
+									.OnDataBinding("onDataBinding")
+									.OnDataBound("onDataBound")
+									.OnRowDataBound("onRowDataBound"))
+									.BindTo(Model.Data)
+
+									.Columns(columns =>
+									{
+										columns.Bound(x => x.RoleID)
+										.Template(x => string.Format("<input type='checkbox' name='checkedRecords' value='{0}' class='checkboxGroups'/>", x.RoleID))
+										.ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= RoleID #>' class='checkboxGroups'/>")
+										//.Title("<input id='mastercheckbox' type='checkbox'/>")
+										.Title(string.Empty)
+										.HtmlAttributes(new { style = "text-align:center" })
+										.HeaderHtmlAttributes(new { style = "text-align:center" });
+								//columns.Bound(x => x.RoleID);
+								columns.Bound(x => x.RoleName);
+									})
+									.DataBinding(dataBinding => dataBinding.Ajax().Select("RoleList", "CCHierarchyMapping"))
+									.EnableCustomBinding(true))
+		</div>
+			<input id="EntityId" name="EntityId" hidden="hidden" value="@EntityId" />
+			<input type="text" id="IsParent" hidden="hidden" name="IsParent" value="@IsParent" />
+			<input id="SelectedRoleIds" name="SelectedRoleIds" hidden="hidden" />
+			<input id="SelectedChildRoleIds" name="SelectedChildRoleIds" hidden="hidden" />
+	}
+
+	

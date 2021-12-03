@@ -1,0 +1,27 @@
+﻿@model Telerik.Web.Mvc.GridModel<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>
+
+	@using (Html.BeginForm())
+	{
+		@(Html.Telerik().Grid<SmartStore.Admin.Models.Hierarchy.HierarchyMappingModel>(Model.Data)
+																		.Name("customers-grid")
+																		.ClientEvents(events => events
+																		.OnDataBinding("onDataBinding")
+																		.OnDataBound("onDataBound")
+																		.OnRowDataBound("onRowDataBound"))
+
+																		.Columns(columns =>
+																		{
+																			columns.Bound(x => x.CustomerID)
+																			.Template(x => string.Format("<input type='checkbox' name='checkedRecords' value='{0}' class='checkboxGroups'/>", x.CustomerID))
+																			.ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
+																			.Title("<input id='mastercheckbox' type='checkbox'/>")
+																			.HtmlAttributes(new { style = "text-align:center" })
+																			.HeaderHtmlAttributes(new { style = "text-align:center" });
+															//columns.Bound(x => x.CustomerID);
+															columns.Bound(x => x.CustomerName);
+																		})
+																		.Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+																		.DataBinding(dataBinding => dataBinding.Ajax().Select("CustomerList", "HierarchyMapping"))
+																		.PreserveGridState()
+														.EnableCustomBinding(true))
+	}

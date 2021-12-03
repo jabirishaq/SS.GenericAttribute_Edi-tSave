@@ -1,0 +1,396 @@
+﻿@model SmartStore.Admin.DBManager.Models.TableManager
+@{
+	Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+	ViewBag.Title = T("Admin.ContentManagement.DBManager.Title");
+	ViewBag.Title = "EditColumns";
+	string tableName = ViewData["TableName"].ToString();
+}
+@using (Html.BeginForm(new { id = "addColumn" }))
+{
+	@Html.HiddenFor(m => tableName)
+	bool AllowNull = false;
+	bool Index = false;
+	<div class="section-header">
+		<div class="title">
+			<i class="fa fa-database"></i>
+			Edit Table
+			<a href='@Url.Action("List", "DBManager")'>(Back To List)</a>
+		</div>
+		<div class="options">
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			@Html.TextBox("TableName", tableName, new { @readonly = "readonly" })
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="t-widget t-grid">
+				<table cellspacing="0">
+					<thead class="t-grid-header">
+						<tr>
+							<th class="t-header" scope="col">
+								<span class="t-link">#</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Name</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Data Type</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Size</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Allow Null</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Index</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link"></span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="t-alt">
+							<td width="5%">
+								@(Model.lstColumn.Count + 1)
+							</td>
+							<td width="30%">
+								@Html.TextBoxFor(m => Model.tableColumn.ColumnName, new { @Name = "ColumnName" })
+							</td>
+							<td width="20%">
+								@Html.DropDownListFor(m => Model.tableColumn.DataType,
+									new SelectList(Model.lstDbType, "Value", "Text"),
+									new { @Name = "DataType", onchange = "jsAddDataTypeValidation(this.value);" })
+							</td>
+							<td width="20%">
+
+								@Html.TextBoxFor(m => Model.tableColumn.DataSize, new { @Name = "DataSize" })
+
+							</td>
+							<td width="10%">
+								@Html.CheckBoxFor(m => AllowNull, new { @Name = "AllowNull" })
+							</td>
+							<td width="10%">
+								@Html.CheckBoxFor(m => Index, new { @Name = "Index" })
+							</td>
+							<td width="10%">
+								<button type="submit" value="Add New" class="btn btn-primary">
+									<i class="fa fa-plus"></i>
+									<span>Add Column</span>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div>&nbsp;</div>
+		<div class="col-md-12">
+			<div class="t-widget t-grid">
+				<table id="tblEditColumns" cellspacing="0">
+					<thead class="t-grid-header">
+						<tr>
+							<th class="t-header" scope="col">
+								<span class="t-link">#</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Name</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Data Type</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Size</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Allow Null</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link">Index</span>
+							</th>
+							<th class="t-header" scope="col">
+								<span class="t-link"></span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+
+						@foreach (var tbl in Model.lstColumn)
+						{
+							bool allowNull = Convert.ToBoolean(tbl.AllowNull);
+							bool index = Convert.ToBoolean(tbl.Index);
+							<tr class="t-alt">
+								<td style="height:60px">
+									@tbl.Id
+								</td>
+								<td>
+									@Html.HiddenFor(m => tbl.ColumnName, new { @id = String.Format("name_{0}", tbl.Id) })
+									@if (tbl.ColumnName.ToLower() == "id")
+									{
+										@Html.TextBoxFor(m => tbl.NewColumnName, new { @readonly = "readonly", @id = String.Format("newname_{0}", tbl.Id) })
+									}
+									else
+									{
+										@Html.TextBoxFor(m => tbl.NewColumnName, new { Style = "display:none;", @id = String.Format("newname_{0}", tbl.Id) })
+										@Html.Label(tbl.NewColumnName, new { @id = String.Format("lblnewname_{0}", tbl.Id) })
+									}
+								</td>
+								<td>
+									@if (tbl.ColumnName.ToLower() == "id")
+									{
+										@Html.DropDownListFor(m => tbl.DataType,
+									   new SelectList(Model.lstDbType, "Value", "Text", tbl.DataType),
+									   new { @disabled = "disabled", @id = String.Format("type_{0}", tbl.Id) })
+									}
+									else
+									{
+										<div style="display:none" id="@String.Format("dvtype_{0}", tbl.Id)">
+											@Html.DropDownListFor(m => tbl.DataType,
+										   new SelectList(Model.lstDbType, "Value", "Text", tbl.DataType),
+										   new { @id = String.Format("type_{0}", tbl.Id), onchange = "jsDataTypeValidation(this.value," + tbl.Id + ");" })
+										</div>
+										@Html.Label(tbl.DataType, new { @id = String.Format("lbltype_{0}", tbl.Id) })
+
+									}
+								</td>
+								<td>
+									@if (tbl.ColumnName.ToLower() == "id")
+									{
+										@Html.TextBoxFor(m => tbl.DataSize, new { @readonly = "readonly", @id = String.Format("size_{0}", tbl.Id) })
+									}
+									else
+									{
+										@Html.TextBoxFor(m => tbl.DataSize, new { Style = "display:none;", @id = String.Format("size_{0}", tbl.Id) })
+
+										@Html.Label(tbl.DataSize.ToString(), new { @id = String.Format("lblsize_{0}", tbl.Id) })
+
+									}
+								</td>
+								<td>
+									@if (tbl.ColumnName.ToLower() == "id")
+									{
+										@Html.CheckBoxFor(m => allowNull, new { @id = String.Format("allownull_{0}", tbl.Id), @disabled = "disabled", @onclick = "$(this).attr('value', this.checked ? true : false)" })
+									}
+									else
+									{
+										@Html.CheckBoxFor(m => allowNull, new { @id = String.Format("allownull_{0}", tbl.Id), @disabled = "disabled", @onclick = "$(this).attr('value', this.checked ? true : false)" })
+									}
+								</td>
+								<td>
+									@if (tbl.ColumnName.ToLower() == "id")
+									{
+										@Html.CheckBoxFor(m => index, new { @id = String.Format("index_{0}", tbl.Id), @disabled = "disabled", @onclick = "$(this).attr('value', this.checked ? true : false)" })
+									}
+									else
+									{
+										@Html.CheckBoxFor(m => index, new { @id = String.Format("index_{0}", tbl.Id), @disabled = "disabled", @onclick = "$(this).attr('value', this.checked ? true : false)" })
+									}
+								</td>
+								<td width="200px;">
+									@if (tbl.ColumnName.ToLower() != "id")
+									{
+										<div id="@String.Format("dvEdit_{0}", tbl.Id)">
+											<button type="button" class="btn btn-warning mybuttonoverlap" onclick="editRow(@tbl.Id)">
+												<i class="fa fa-check"></i>
+												<span>@T("Admin.Common.Edit")</span>
+											</button>
+										</div>
+										<button type="button" id="@String.Format("btnSave_{0}", tbl.Id)" style="display:none;float:left;margin-right:3px;" class="btn btn-warning" onclick="SaveColumn(@tbl.Id)">
+											<i class="fa fa-check"></i>
+											<span>@T("Admin.Common.Save")</span>
+										</button>
+
+										<button type="button" id="@String.Format("btnCancel_{0}", tbl.Id)" style="display:none;" class="btn btn-danger" onclick="cancelRow(@tbl.Id)">
+											<i class="fa fa-check"></i>
+											<span>@T("Admin.Common.Cancel")</span>
+										</button>
+
+
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="dvContainer"></div>
+	</div>
+}
+<style>
+	table#tblEditColumns tr td .mybuttonoverlap {
+		display: none;
+	}
+
+	table#tblEditColumns tr:hover td .mybuttonoverlap {
+		display: inline-block;
+	}
+</style>
+<script>
+	function editRow(id) {
+		$('#newname_' + id).css("display", "block");
+		$('#dvtype_' + id).css("display", "block");
+		$('#size_' + id).css("display", "block");
+		$('#btnSave_' + id).css("display", "block");
+		$('#btnCancel_' + id).css("display", "block");
+		$('#allownull_' + id).prop('disabled', false);
+		$('#index_' + id).prop('disabled', false);
+
+
+		$('#lblnewname_' + id).css("display", "none");
+		$('#lbltype_' + id).css("display", "none");
+		$('#lblsize_' + id).css("display", "none");
+		$('#dvEdit_' + id).css("display", "none");
+
+
+	}
+	function cancelRow(id) {
+		$('#newname_' + id).css("display", "none");
+		$('#dvtype_' + id).css("display", "none");
+		$('#size_' + id).css("display", "none");
+		$('#btnSave_' + id).css("display", "none");
+		$('#btnCancel_' + id).css("display", "none");
+		$('#allownull_' + id).prop('disabled', true);
+		$('#index_' + id).prop('disabled', true);
+
+		$('#lblnewname_' + id).css("display", "block");
+		$('#lbltype_' + id).css("display", "block");
+		$('#lblsize_' + id).css("display", "block");
+		$('#dvEdit_' + id).css("display", "block");
+
+	}
+	function jsDataTypeValidation(value,id)
+	{
+		if (value.toLowerCase() == "varchar" || value.toLowerCase() == "nvarchar" || value.toLowerCase() == "decimal" || value.toLowerCase() == "text" || value.toLowerCase() == "char") {
+			$('#size_' + id).removeAttr("disabled");
+		}
+		else {
+			$('#size_' + id).val("");
+			$('#size_' + id).attr("disabled", "disabled");
+		}
+	}
+	function jsAddDataTypeValidation(value)
+	{
+		if (value.toLowerCase() == "varchar" || value.toLowerCase() == "nvarchar" || value.toLowerCase() == "decimal" || value.toLowerCase() == "text" || value.toLowerCase() == "char") {
+			$('#tableColumn_DataSize').removeAttr("disabled");
+		}
+		else {
+			$('#tableColumn_DataSize').val("");
+			$('#tableColumn_DataSize').attr("disabled", "disabled");
+		}
+	}
+
+    $(document).ready(function () {
+    });
+	function SaveColumn(id) {
+		if (!confirm("Changing the data type may affect your data. Would you like to continue?")) {
+			return false;
+		}
+        var Model = {
+            ColumnName: '',
+            NewColumnName:'',
+            DataType:'',
+            DataSize: 0,
+			AllowNull: false,
+			Index: false,
+            TableName:''
+        };
+
+        Model.ColumnName = $("#name_" + id).val();
+		Model.NewColumnName = $("#newname_" + id).val();
+		Model.DataType = $("#type_" + id).val();
+        Model.DataSize = $("#size_" + id).val();
+		Model.AllowNull = $("#allownull_" + id).val();
+		Model.Index = $("#index_" + id).val();
+        Model.TableName = '@tableName';
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@Url.Content("~/Admin/DBManager/SaveColumn")",
+            data: JSON.stringify(Model),
+            dataType: "json",
+			success: function (data) {
+				cancelRow(id);
+                //refresh page
+                window.location.reload(false);
+            },
+
+            error: function (data) {
+                alert('error occured');
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    var totalRecords = parseInt( @Model.lstColumn.Count);
+    var nextId = (totalRecords + 1);
+
+	function AddDropDownList() {
+
+        var ddlCustomers = $("<select id='type_" + nextId + "' />");
+        var txtName = $("<input type='text' id='name_" + nextId + "' />");
+
+        ddlCustomers.append($('#type_1').html());
+
+        //Reference the container DIV.
+        var dvContainer = $("#tblEditColumns")
+
+        var markup = "<tr><td>" + nextId + "</td> <td><input type='text' id='name_" + nextId + "'></td><td>" + ddlDataType + "</td>";
+        $("table tbody").append(markup);
+        //Add the DropDownList to DIV.
+        var div = $("<tr><td></td></tr>");
+
+        div.append(txtName);
+        div.append(ddlCustomers);
+
+        //Create a Remove Button.
+        var btnRemove = $("<input type = 'button' value = 'Remove' />");
+        btnRemove.click(function () {
+            $(this).parent().remove();
+        });
+
+        //Add the Remove Buttton to DIV.
+        div.append(btnRemove);
+
+        //Add the DIV to the container DIV.
+        dvContainer.append(div);
+    };
+</script>
+<script>
+
+	function AddNewRow() {
+		var ddlDataType = "<select  id='type_" + nextId + "' ></select>"
+
+		var markup = "<tr><td>" + nextId + "</td> <td><input type='text' id='name_" + nextId + "'></td><td>" + ddlDataType + "</td>";
+		$("table tbody").append(markup);
+
+		$(ddlDataType).append($('#type_1').html());
+
+		nextId++;
+	}
+
+	function copyDataTypeDropDownList(id) {
+		$('#' + id).append($('#type_1').html());
+	}
+	$(document).ready(function () {
+		$(".add-row").click(function () {
+		});
+
+		// Find and remove selected table rows
+		$(".delete-row").click(function () {
+			$("table tbody").find('input[name="record"]').each(function () {
+				if ($(this).is(":checked")) {
+					$(this).parents("tr").remove();
+				}
+			});
+		});
+	});
+</script>
+

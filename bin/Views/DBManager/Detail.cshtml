@@ -1,0 +1,32 @@
+﻿@using Telerik.Web.Mvc.UI;
+@model Telerik.Web.Mvc.GridModel<SmartStore.Admin.DBManager.Models.DBDetailModel>
+
+@{
+	Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+	ViewBag.Title = T("Admin.ContentManagement.DBManager.Title");
+}
+<div class="section-header">
+	<div class="title">
+		<i class="fa fa-database"></i>
+		Table Detail - @ViewBag.tableName
+		<a href='@Url.Action("List", "DBManager")'>(Back To List)</a>
+	</div>
+	<div class="options">
+			<a href="@Url.Action("EditTableColumns", new { @id = @ViewBag.tableName})" class="btn btn-success">
+			<i class="fa fa-database"></i>
+			<span>Import Data</span>
+		</a>
+		<a href="@Url.Action("EditTableColumns", new { @id = @ViewBag.tableName})" class="btn btn-warning">
+			<i class="fa fa-check"></i>
+			<span>Edit Table</span>
+		</a>
+		@*<a href="@Url.Action("CreateTable")" class="btn btn-primary">
+			<i class="fa fa-plus"></i>
+			<span>Add Column</span>
+		</a>*@
+	</div>
+</div>
+
+<div id="divDetailGrid">
+	@{ Html.RenderPartial("_DBDetailGrid", Model);}
+</div>

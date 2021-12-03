@@ -1,0 +1,412 @@
+﻿
+@model SmartStore.Admin.DBManager.Models.DBDetailModel
+@using System.Web.Mvc;
+@using System.Collections;
+@{
+    Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+    ViewBag.Title = T("Admin.ContentManagement.DBManager.Title");
+}
+<div class="section-header">
+    <div class="title">
+        <i class="fa fa-database"></i>
+        Add Table
+        <a href='@Url.Action("List", "DBManager")'>(Back To List)</a>
+    </div>
+    <div class="options">
+        <button type="button" id="btnSave" name="save" value="save" class="btn btn-warning">
+            <i class="fa fa-check"></i>
+            <span>@T("Admin.Common.Save")</span>
+        </button>
+    </div>
+</div>
+
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle form-group mr-3 pt-2">
+            <label>Table Name</label>
+        </td>
+        <td class="adminData">
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">CCDBM_</div>
+                </div>
+                <input type="text" id="txtTableName" class="form-control">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle form-group mr-3 pt-2">
+            <label>Id</label>
+        </td>
+        <td class="adminData">
+            <input type="text" id="txtId" value="Id" readonly="readonly" class="form-control" />
+        </td>
+    </tr>
+</table>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="t-widget t-grid">
+            <table cellspacing="0">
+                <thead class="t-grid-header">
+                    <tr>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Name</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Data Type</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Size</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Allow Null</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Index</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="t-alt">
+                        <td width="30%">
+                            <input type='text' id='columnName' class='nametest form-control' />
+                        </td>
+                        <td width="20%">
+                            <div id='dvDataType'></div>
+                        </td>
+                        <td width="20%">
+                            <input type='text' id='dataSize' class='form-control' />
+                        </td>
+                        <td width="10%">
+                            <input type='checkbox' id='allowNull' data-val='true' value='true' />
+                        </td>
+                        <td width="10%">
+                            <input type='checkbox' id='colIndex' data-val='true' value='true' />
+                        </td>
+                        <td width="10%">
+                            <button type="button" id="btnAddNewColumn" value="Add New" class="btn btn-primary">
+                                <i class="fa fa-plus"></i>
+                                <span>Add Column</span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>&nbsp;</div>
+    <div class="col-md-12">
+        <div class="t-widget t-grid">
+            <table id="tblCreateColumns" cellspacing="0">
+                <thead class="t-grid-header">
+                    <tr>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Name</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Data Type</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Size</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Allow Null</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link">Index</span>
+                        </th>
+                        <th class="t-header" scope="col">
+                            <span class="t-link"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*<div class="title" style="font-size: 1.25rem; line-height: calc(2.4375rem + 2px); color: #8d9ba9;">
+        Add Columns
+    </div>
+
+    <div id="divTextbox">
+        <hr style="border-top-width: 1px; border-color: #ee9B00; margin-top: 0px;">
+        <div class="row mt-3">
+            <div class="col-md-4 form-group">
+                <label>Name</label>
+                <input type="text" id="txtName_1" name="addrow" class="form-control nametest" />
+            </div>
+            <div class="col-md-4 form-group">
+                <label>Data Type</label>
+                @Html.DropDownList("Values", new SelectList(ViewBag.DBTypes, "Value", "Text"), "--Select--", new { id = "txtDataType_1" })
+            </div>
+            <div class="col-md-2 form-group">
+                <label>Data Size</label>
+                <input type="text" id="txtDataSize_1" name="addrow" class="form-control" />
+            </div>
+            <div class="col-md-1 form-group">
+                <label>Allow Null</label>
+                <label class="switch form-control border-0">
+                    <input checked="checked" class="check-box form-check-input form-control" data-val="flase" id="allowNull_1" name="AllowComments" type="checkbox" value="true">
+                    <span class="switch-toggle" data-on="On" data-off="Off"></span>
+                </label>
+            </div>
+            <div class="col-md-1 form-group">
+                <label>Index</label>
+                <label class="switch form-control border-0">
+                    <input checked="checked" class="check-box form-check-input form-control" data-val="flase" id="index_1" name="AllowComments" type="checkbox" value="true">
+                    <span class="switch-toggle" data-on="On" data-off="Off"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row float-right">
+        <div class="col-lg-12">
+            <button type="button" id="btnAddRow" class="btn btn-primary">Add Column</button>
+            <button type="button" id="btnRemoveRow" class="btn btn-primary">Remove Column</button>
+        </div>
+    </div>*@
+
+<link href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+		//fill the datatype list
+        fillDataTypesList();
+    });
+
+	//onchange dataSize
+	var sizeable_data_types = [
+            "Variant", "Xml", "Udt", "Structured", "Char",
+            "Decimal", "NChar", "NVarChar", "VarBinary", "VarChar",
+            "Time", "DateTime2", "DateTimeOffset"];
+    $(document).ready(function () {
+        $("#dvDataType").on("change", function (e) {
+            debugger;
+            if (e.target.value && sizeable_data_types.indexOf(e.target.value) > -1) {
+                //readonly remove
+                $("#dataSize").attr("readonly", false);
+            } else {
+                //readonly add
+                $("#dataSize").attr("readonly", true);
+            }
+        });
+    });
+    function checkReadonly(del_id) {
+		debugger;
+		var isReadOnly = false;
+		var _datatype = $("#txtDataType_" + del_id).val();
+		if (_datatype && sizeable_data_types.indexOf(_datatype) < 0) {
+			isReadOnly = true;
+		}
+
+		if (isReadOnly) {
+                //readonly remove
+                $("#txtDataSize_"+del_id).attr("readonly", true);
+            } else {
+                //readonly add
+                $("#txtDataSize_"+del_id).attr("readonly", false);
+            }
+    }
+
+	var counter = 1;
+
+	var clearColVals = function () {
+		$("#columnName").val('');
+		$("#dataSize").val('');
+		$("#txtDataType").val('--Select--');
+
+		$('#allowNull').prop('checked', false);
+		$('#colIndex').prop('checked', false);
+	}
+
+	$("#btnAddNewColumn").on("click", function () {
+		debugger;
+		var colName = $("#columnName").val();
+		var dataSize = $("#dataSize").val();
+		var dataType = $("#txtDataType").val();
+
+		var allowNull = $('#allowNull').is(":checked") ? true : false;
+		var colIndex = $('#colIndex').is(":checked") ? true : false;
+
+		if ((colName == "" || colName == undefined) || (dataType == "--Select--" || dataType == undefined)) {
+			return false;
+        }
+
+        var readOnly = "readonly";
+		if (sizeable_data_types.indexOf(dataType) > -1) {
+            readOnly = "";
+        }
+
+		$("#tblCreateColumns")
+				.append("<tr class='t-alt' data-counter='" + counter.toString() + "' id='row_" + counter.toString() + "'><td width='30%'><input type='text' id='txtName_" + counter.toString() + "' name='addrow' class='nametest form-control' value='"+ colName +"' /></td>" +
+					"<td width='20%'><div id='dvType_" + counter.toString() + "'></div></td>"+
+					"<td width='20%'><input type='text' id='txtDataSize_" + counter.toString() + "' name='addrow' class='form-control' "+readOnly+" value='"+ dataSize +"' /></td>"+
+					"<td width='10%'><input type='checkbox' id='allowNull_" + counter.toString() + "' /></td>"+
+					"<td width='10%'><input type='checkbox' id='index_" + counter.toString() + "' /></td>"+
+					"<td width='10%'><input type='button' data-rowId='" + counter.toString() + "' id='btnDelete_" + counter.toString() + "' class='btn btn-danger btnDeleteCol' value='Delete' /></td></tr>");
+
+		//set the checkboxs value
+		$("#allowNull_" + counter.toString()).prop('checked', allowNull);
+		$("#index_" + counter.toString()).prop('checked', colIndex);
+
+		$("#tblCreateColumns tbody").sortable();
+		$("#tblCreateColumns tbody").disableSelection();
+
+
+
+		$.ajax({
+				type: "POST",
+				url: '@Url.Action("GetDropdown", "DBManager")',
+				dataType: 'json',
+				data: JSON.stringify({ 'model': model, 'strTableName': $("#txtTableName").val() }),
+				contentType: "application/json; charset=utf-8",
+				success: function (data) {
+					var items = [];
+					items.push("<select onchange=checkReadonly('"+ counter.toString()+"') id='txtDataType_" + counter.toString() + "'>");
+					items.push("<option>--Select--</option>");
+					$.each(data, function () {
+						items.push("<option value=" + this.Value + ">" + this.Text + "</option>");
+					});
+					items.push("</select>");
+					$("#dvType_" + counter.toString()).html(items.join(' '));
+
+					//set the selected data type
+					$("#txtDataType_" + counter.toString()).val(dataType);
+
+					clearColVals();
+
+					counter = counter + 1;
+				},
+				error: function (response) {
+					alert(response);
+				}
+			});
+
+
+	});
+
+	$(document).on("click",".btnDeleteCol", function () {
+		var dataRow = $(this).attr('data-rowId');
+		var rowId = "#row_" + dataRow.toString();
+		$(rowId).remove();
+	});
+
+	@*$("#btnAddRow").on("click", function () {
+
+		$("#divTextbox")
+				.append("<hr style='border-top-width: 1px; border-color: #ee9B00;'>" +
+				"<div class='row mt-3 grid-filter'>" +
+				"<div class='col-md-4 form-group'><label>Name</label><input type='text' id='txtName_" + counter.toString() + "' name='addrow' class='nametest form-control' /></div>" +
+				"<div class='col-md-4 form-group'><label>Data Type</label>" +
+				"<div id='dvType_" + counter.toString() + "'></div></div> " +
+					"<div class='col-md-2 form-group'><label>Data Size</label><input type='text' id='txtDataSize_" + counter.toString() + "' name='addrow' class='form-control' /></div> " +
+					"<div class='col-md-1 form-group'><label>Allow Null</label><label class='switch form-control border-0'><input type='checkbox' id='allowNull_" + counter.toString() + "' checked='checked' name='addrow' class='check-box form-check-input form-control' data-val='true' value='true' /><span class='switch-toggle' data-on='On' data-off='Off'></span></label></div>" +
+					"<div class='col-md-1 form-group'><label>Index</label><label class='switch form-control border-0'><input type='checkbox' id='index_" + counter.toString() + "' checked='checked' name='addrow' class='check-box form-check-input form-control' data-val='true' value='true' /><span class='switch-toggle' data-on='On' data-off='Off'></span></label></div>" +
+					"</div>");
+
+		$.ajax({
+				type: "POST",
+				url: '@Url.Action("GetDropdown", "DBManager")',
+				dataType: 'json',
+				data: JSON.stringify({ 'model': model, 'strTableName': $("#txtTableName").val() }),
+				contentType: "application/json; charset=utf-8",
+				success: function (data) {
+					var items = [];
+					items.push("<select id='txtDataType_" + counter.toString() + "'>");
+					items.push("<option>--Select--</option>");
+					$.each(data, function () {
+						items.push("<option value=" + this.Value + ">" + this.Text + "</option>");
+					});
+					items.push("</select>");
+					$("#dvType_" + counter.toString()).html(items.join(' '));
+
+				},
+				error: function (response) {
+					alert(response);
+				}
+			});
+	});
+
+	$("#btnRemoveRow").on("click", function () {
+		$("#divTextbox").children().last().remove();
+		$("#divTextbox hr").last().remove();
+    });*@
+
+    var fillDataTypesList = function () {
+		$.ajax({
+				type: "POST",
+				url: '@Url.Action("GetDropdown", "DBManager")',
+				dataType: 'json',
+				contentType: "application/json; charset=utf-8",
+				success: function (data) {
+					var items = [];
+					items.push("<select id='txtDataType'>");
+					items.push("<option>--Select--</option>");
+					$.each(data, function () {
+						items.push("<option value=" + this.Value + ">" + this.Text + "</option>");
+					});
+					items.push("</select>");
+					$("#dvDataType").html(items.join(' '));
+				},
+				error: function (response) {
+					alert(response);
+				}
+			});
+    }
+
+	var model = [];
+	$("#btnSave").on("click", function () {
+
+		GetAllInputValues();
+
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("CreateTableSubmit", "DBManager")',
+			dataType: 'json',
+			data: JSON.stringify({ 'model': model, 'strTableName': $("#txtTableName").val() }),
+			contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                model.length = 0;
+                console.log("--------response--------"+JSON.stringify(response));
+                if (response) {
+                    if (response == "success") {
+						window.location.href = '@Url.Action("List", "DBManager")';
+                    }
+                }
+
+			},
+			error: function (response) {
+                alert(response);
+				model.length = 0;
+			}
+		});
+	});
+
+	function GetAllInputValues()
+	{
+		$("#tblCreateColumns tr").each(function() {
+			var rowNum = $(this).attr("data-counter");
+			var name = $("#txtName_" + rowNum + "").val();
+			if (name != '' && name != undefined) {
+				var dataType = $("#txtDataType_" + rowNum + "").val();
+				var dataSize = $("#txtDataSize_" + rowNum + "").val();
+				var allowNull = $("#allowNull_" + rowNum + "").is(":checked");
+				var index = $("#index_" + rowNum + "").is(":checked");
+				var str = name + "," + dataType + "," + dataSize + "," + allowNull + "," + index;
+				model.push(str);
+			}
+
+		});
+	}
+</script>

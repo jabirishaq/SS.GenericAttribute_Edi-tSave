@@ -1,0 +1,94 @@
+﻿@using Telerik.Web.Mvc.UI;
+@model Telerik.Web.Mvc.GridModel<SmartStore.Core.Domain.Hierarchy.HierarchyModel>
+
+@{
+    Layout = "~/Administration/Views/Shared/Layouts/_AdminLayout.cshtml";
+    ViewBag.Title = T("Admin.Configuration.Hierarchy.Title");
+}
+<div class="section-header">
+    <div class="title">
+        <i class="fa fa-users"></i>
+        @T("Admin.Configuration.Hierarchy.Heading")
+    </div>
+    <div class="options">
+        <button type="button" id="btnAddHierarchy" value="AddNew" class="btn btn-primary mb-1 ml-5" data-toggle="modal" data-target="#Modal">
+            <i class="fa fa-check"></i>
+            <span>@T("Admin.Common.AddNew")</span>
+        </button>
+    </div>
+</div>
+<div id="divCCHierarchyGrid">
+    @{ Html.RenderPartial("_CCHierarchyGrid", Model);}
+</div>
+@{Html.SmartStore().Window()
+                .Name("Modal")
+                .Content(
+@<text>
+    <div class="modal-body" id="divModalBody">
+</text>)
+.Render();
+}
+
+<!--<div id="Modal" class="modal fade" data-backdrop="static" role="dialog">
+    <div class="modal-dialog">-->
+        <!-- Modal content-->
+        <!--<div class="modal-content">
+            <div class="modal-body" id="divModalBody">
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<script>
+	//var ModelParent = { EntityId: entityId, IsParent: IsParent };
+	$("#btnAddHierarchy").on('click', function () {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("_AddOrUpdateHierarchy", "Hierarchy")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            data: JSON.stringify(),
+            success: function (result) {
+                $('#divModalBody').html(result);
+            }
+        });
+	});
+	function EditHierarchy(entityId) {
+		var ModelParent = { id: entityId };
+		$.ajax({
+            type: 'GET',
+            url: '@Url.Action("_AddOrUpdateHierarchy", "Hierarchy",new { id="_id"})'.replace('_id', entityId),
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            //data: JSON.stringify(),
+			//data: ModelParent,
+            success: function (result) {
+                $('#divModalBody').html(result);
+            }
+        });
+	}
+	function OnSuccess(response)
+    {
+		$('#Modal').modal('hide');
+        $("#divCCHierarchyGrid").html(response);
+	}
+
+    function DeleteHierarchy(entityId) {
+        debugger
+		if (confirm("Are you really want to delete this hierarchy?"))
+		{
+			var ModelParent = { id: entityId };
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("Delete", "Hierarchy",new { id="_id"})'.replace('_id', entityId),
+				contentType: "application/json; charset=utf-8",
+				dataType: "JSON",
+				//data: JSON.stringify(),
+				//data: ModelParent,
+				success: function (result) {
+					$('#divCCHierarchyGrid').html(result);
+				}
+			});
+		}
+	}
+</script>
