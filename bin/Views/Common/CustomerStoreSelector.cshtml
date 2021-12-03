@@ -1,6 +1,0 @@
-﻿@model SmartStore.Web.Models.Common.AdminStoreSelectorModel
-@{var allString = T("Admin.Common.All").Text; }
-
-<div class="col-sm-6 col-lg-4 col-xl-3 form-group">
-    @Html.DropDownList("AvailableStores", null, allString, htmlAttributes: new { @class = "form-control customerstore_selector" })
-</div>
